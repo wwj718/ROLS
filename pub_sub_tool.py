@@ -31,12 +31,14 @@ class Helper:
         pub.send_multipart([asbytes(topic),asbytes(data)])
         print("topic: {} ; msg: {}".format(topic,data))
 
-    def topic_sub(self,port=5556):
+    def topic_sub(self,port=5556,topic="test"):
         '''
             python pub_and_sub_tool.py topic_sub 
         '''
         sub = context.socket(zmq.SUB)
         sub.connect(f"tcp://127.0.0.1:{port}")
+        sub.setsockopt_string(zmq.SUBSCRIBE,topic)
+        '''
         topics = ["test"]
         if not topics:
             print("Receiving messages on ALL topics...")
@@ -47,6 +49,7 @@ class Helper:
             for t in topics:
                 sub.setsockopt_string(zmq.SUBSCRIBE,t)
                 # sub.setsockopt(zmq.SUBSCRIBE,t)
+        '''
         try:
             while True:
                 topic, msg = sub.recv_multipart()
